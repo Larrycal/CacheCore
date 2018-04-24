@@ -22,7 +22,7 @@ pod 'CacheCore'
 
 ## Author
 
-Larrycal, lyk82465@gmail..com
+Larrycal, lyk82465@gmail.com
 
 ## License
 
