@@ -1,0 +1,6 @@
+framework module Pods_CacheCore_Example {
+  umbrella header "Pods-CacheCore_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

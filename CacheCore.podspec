@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'CacheCore'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of CacheCore.'
+  s.summary          = 'iOS Json 缓存框架'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,17 +18,18 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+                基于iOS平台的JSon缓存框架
                        DESC
 
   s.homepage         = 'https://github.com/Larrycal/CacheCore'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Larrycal' => 'liuyuke@bytedance.com' }
-  s.source           = { :git => 'https://github.com/Larrycal/CacheCore.git', :tag => s.version.to_s }
+  s.author           = { 'Larrycal' => 'lyk82465@gmail.com' }
+  s.source           = { :git => 'https://github.com/Larrycal/CacheCore.git' }
+  # s.source           = { :git => 'https://github.com/Larrycal/CacheCore.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'CacheCore/Classes/**/*'
   
@@ -37,6 +38,10 @@ TODO: Add long description of the pod here.
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
+  s.frameworks = 'Fundation'
   # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'Moya', '~> 11.0.0'
+  s.dependency 'ObjectMapper', '~> 3.1'
+  s.dependency 'FMDB'
+  s.dependency 'CocoaAsyncSocket'
 end

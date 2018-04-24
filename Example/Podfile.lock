@@ -1,0 +1,16 @@
+PODS:
+  - CacheCore (0.1.0)
+
+DEPENDENCIES:
+  - CacheCore (from `../`)
+
+EXTERNAL SOURCES:
+  CacheCore:
+    :path: ../
+
+SPEC CHECKSUMS:
+  CacheCore: f38ed12889b882a118522418529d08bff8db53a8
+
+PODFILE CHECKSUM: ddef91b56691e170172f62babdb2bf27460ccf41
+
+COCOAPODS: 1.4.0

@@ -1,0 +1,22 @@
+{
+  "name": "CacheCore",
+  "version": "0.1.0",
+  "summary": "A short description of CacheCore.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/Larrycal/CacheCore",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Larrycal": "liuyuke@bytedance.com"
+  },
+  "source": {
+    "git": "https://github.com/Larrycal/CacheCore.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "CacheCore/Classes/**/*"
+}
