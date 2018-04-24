@@ -1,22 +1,36 @@
 {
   "name": "CacheCore",
   "version": "0.1.0",
-  "summary": "A short description of CacheCore.",
-  "description": "TODO: Add long description of the pod here.",
+  "summary": "iOS Json 缓存框架",
+  "description": "基于iOS平台的JSon缓存框架",
   "homepage": "https://github.com/Larrycal/CacheCore",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "Larrycal": "liuyuke@bytedance.com"
+    "Larrycal": "lyk82465@gmail.com"
   },
   "source": {
-    "git": "https://github.com/Larrycal/CacheCore.git",
-    "tag": "0.1.0"
+    "git": "https://github.com/Larrycal/CacheCore.git"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "10.0"
   },
-  "source_files": "CacheCore/Classes/**/*"
+  "source_files": "CacheCore/Classes/**/*",
+  "frameworks": "Foundation",
+  "dependencies": {
+    "Moya": [
+      "~> 11.0.0"
+    ],
+    "ObjectMapper": [
+      "~> 3.1"
+    ],
+    "FMDB": [
+
+    ],
+    "CocoaAsyncSocket": [
+
+    ]
+  }
 }

@@ -1,5 +1,5 @@
 import XCTest
-import CacheCore
+//import CacheCore
 
 class Tests: XCTestCase {
     

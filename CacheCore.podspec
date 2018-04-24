@@ -38,7 +38,7 @@ Pod::Spec.new do |s|
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  s.frameworks = 'Fundation'
+  s.frameworks = 'Foundation'
   # s.dependency 'AFNetworking', '~> 2.3'
   s.dependency 'Moya', '~> 11.0.0'
   s.dependency 'ObjectMapper', '~> 3.1'
