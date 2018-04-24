@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'CacheCore_Example' do
+  pod 'CacheCore', :path => '../'
+
+  target 'CacheCore_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
