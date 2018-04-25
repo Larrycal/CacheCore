@@ -28,9 +28,9 @@ open class NetworkSocketDelegate: NSObject,GCDAsyncSocketDelegate {
      * For example, your implementation might look something like this:
      * dispatch_retain(myExistingQueue);
      * return myExistingQueue;
-    **/
+     **/
     public var newSocketQueueForConnectionHandler: ((_ address: Data, _ sock: GCDAsyncSocket) -> NSObject?)?
-
+    
     /**
      * Called when a socket accepts a connection.
      * Another socket is automatically spawned to handle it.
@@ -40,45 +40,45 @@ open class NetworkSocketDelegate: NSObject,GCDAsyncSocketDelegate {
      *
      * By default the new socket will have the same delegate and delegateQueue.
      * You may, of course, change this at any time.
-    **/
+     **/
     public var socketDidAcceptNewSocketHandler: ((_ sock: GCDAsyncSocket, _ newSocket: GCDAsyncSocket) -> Void)?
-
+    
     
     /// Called when a socket connects and is ready for reading and writing.
     public var socketDidConnectToHostHandler: ((_ sock: GCDAsyncSocket, _ host: String, _ port: UInt16) -> Void)?
-
+    
     /**
      * Called when a socket connects and is ready for reading and writing.
      * The host parameter will be an IP address, not a DNS name.
      **/
     public var socketDidConnectToURLHandler: ((_ sock: GCDAsyncSocket, _ url: URL) -> Void)?
-
+    
     /**
      * Called when a socket has completed reading the requested data into memory.
      * Not called if there is an error.
-    **/
+     **/
     public var socketDidReadDataWithTagHandler: ((_ sock: GCDAsyncSocket, _ data: Data, _ tag: Int) -> Void)?
-
+    
     /**
      * Called when a socket has read in data, but has not yet completed the read.
      * This would occur if using readToData: or readToLength: methods.
      * It may be used to for things such as updating progress bars.
-    **/
+     **/
     public var socketDidReadPartialDataOfLengthHandler: ((_ sock: GCDAsyncSocket,
-                                                   _ partialLength: UInt,
-                                                   _ tag: Int) -> Void)?
-
+    _ partialLength: UInt,
+    _ tag: Int) -> Void)?
+    
     /// Called when a socket has completed writing the requested data. Not called if there is an error.
     public var socketDidWriteDataWithTagHandler: ((_ sock: GCDAsyncSocket, _ tag: Int) -> Void)?
-
+    
     /**
      * Called when a socket has written some data, but has not yet completed the entire write.
      * It may be used to for things such as updating progress bars.
-    **/
+     **/
     public var socketDidWritePartialDataOfLengthHandler: ((_ sock: GCDAsyncSocket,
-                                                    _ partialLength: UInt,
-                                                    _ tag: Int) -> Void)?
-
+    _ partialLength: UInt,
+    _ tag: Int) -> Void)?
+    
     /**
      * Called if a read operation has reached its timeout without completing.
      * This method allows you to optionally extend the timeout.
@@ -89,12 +89,12 @@ open class NetworkSocketDelegate: NSObject,GCDAsyncSocketDelegate {
      * The length parameter is the number of bytes that have been read so far for the read operation.
      *
      * Note that this method may be called multiple times for a single read if you return positive numbers.
-    **/
+     **/
     public var socketShouldTimeoutReadWithTagHandler: ((_ sock: GCDAsyncSocket,
-                                                 _ tag: Int,
-                                                 _ elapsed: TimeInterval,
-                                                 _ length: UInt) -> TimeInterval)?
-
+    _ tag: Int,
+    _ elapsed: TimeInterval,
+    _ length: UInt) -> TimeInterval)?
+    
     /**
      * Called if a write operation has reached its timeout without completing.
      * This method allows you to optionally extend the timeout.
@@ -105,20 +105,20 @@ open class NetworkSocketDelegate: NSObject,GCDAsyncSocketDelegate {
      * The length parameter is the number of bytes that have been written so far for the write operation.
      *
      * Note that this method may be called multiple times for a single write if you return positive numbers.
-    **/
+     **/
     public var socketShouldTimeoutWriteWithTagHandler: ((_ sock: GCDAsyncSocket,
-                                                  _ tag: Int,
-                                                  _ elapsed: TimeInterval,
-                                                  _ length: UInt) -> TimeInterval)?
-
+    _ tag: Int,
+    _ elapsed: TimeInterval,
+    _ length: UInt) -> TimeInterval)?
+    
     /**
      * Conditionally called if the read stream closes, but the write stream may still be writeable.
      *
      * This delegate method is only called if autoDisconnectOnClosedReadStream has been set to NO.
      * See the discussion on the autoDisconnectOnClosedReadStream method for more information.
-    **/
+     **/
     public var socketDidCloseReadStreamHandler: ((_ sock: GCDAsyncSocket) -> Void)?
-
+    
     /**
      * Called when a socket disconnects with or without error.
      *
@@ -139,18 +139,18 @@ open class NetworkSocketDelegate: NSObject,GCDAsyncSocketDelegate {
      * asyncSocket          = nil;// I'm implicitly disconnecting the socket
      *
      * Of course, this depends on how your state machine is configured.
-    **/
+     **/
     public var socketDidDisconnectWithErrorHandler: ((_ sock: GCDAsyncSocket, _ err: Error?) -> Void)?
-
+    
     /**
      * Called after the socket has successfully completed SSL/TLS negotiation.
      * This method is not called unless you use the provided startTLS method.
      *
      * If a SSL/TLS negotiation fails (invalid certificate, etc) then the socket will immediately close,
      * and the socketDidDisconnect:withError: delegate method will be called with the specific SSL error code.
-    **/
+     **/
     public var socketDidSecureHandler: ((_ sock: GCDAsyncSocket) -> Void)?
-
+    
     /**
      * Allows a socket delegate to hook into the TLS handshake and manually validate the peer it's connecting to.
      *
@@ -167,11 +167,11 @@ open class NetworkSocketDelegate: NSObject,GCDAsyncSocketDelegate {
      * Thus this method uses a completionHandler block rather than a normal return value.
      * The completionHandler block is thread-safe, and may be invoked from a background queue/thread.
      * It is safe to invoke the completionHandler block even if the socket has been closed.
-    **/
+     **/
     public var socketDidReceiveTrustHandler: ((_ sock: GCDAsyncSocket,
-                                        _ trust: SecTrust,
-                                        _ completionHandler: ((Bool) -> Void)) -> Void)?
-
+    _ trust: SecTrust,
+    _ completionHandler: ((Bool) -> Void)) -> Void)?
+    
     // MARK: - GCDAsyncSocketDelegate
     public func newSocketQueueForConnection(fromAddress address: Data, on sock: GCDAsyncSocket) -> NSObject? {
         if let handler = self.newSocketQueueForConnectionHandler {
@@ -179,35 +179,35 @@ open class NetworkSocketDelegate: NSObject,GCDAsyncSocketDelegate {
         }
         return nil
     }
-
+    
     public func socket(_ sock: GCDAsyncSocket, didAcceptNewSocket newSocket: GCDAsyncSocket) {
         self.socketDidAcceptNewSocketHandler?(sock, newSocket)
     }
-
+    
     public func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         self.socketDidConnectToHostHandler?(sock, host, port)
     }
-
+    
     public func socket(_ sock: GCDAsyncSocket, didConnectTo url: URL) {
         self.socketDidConnectToURLHandler?(sock, url)
     }
-
+    
     public func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
         self.socketDidReadDataWithTagHandler?(sock, data, tag)
     }
-
+    
     public func socket(_ sock: GCDAsyncSocket, didReadPartialDataOfLength partialLength: UInt, tag: Int) {
         self.socketDidReadPartialDataOfLengthHandler?(sock, partialLength, tag)
     }
-
+    
     public func socket(_ sock: GCDAsyncSocket, didWriteDataWithTag tag: Int) {
         self.socketDidWriteDataWithTagHandler?(sock, tag)
     }
-
+    
     public func socket(_ sock: GCDAsyncSocket, didWritePartialDataOfLength partialLength: UInt, tag: Int) {
         self.socketDidWritePartialDataOfLengthHandler?(sock, partialLength, tag)
     }
-
+    
     public func socket(_ sock: GCDAsyncSocket,
                        shouldTimeoutReadWithTag tag: Int,
                        elapsed: TimeInterval,
@@ -217,7 +217,7 @@ open class NetworkSocketDelegate: NSObject,GCDAsyncSocketDelegate {
         }
         fatalError("socket(sock:tag:elapsed:length:) has not been implemented")
     }
-
+    
     public func socket(_ sock: GCDAsyncSocket,
                        shouldTimeoutWriteWithTag tag: Int,
                        elapsed: TimeInterval,
@@ -227,19 +227,19 @@ open class NetworkSocketDelegate: NSObject,GCDAsyncSocketDelegate {
         }
         fatalError("socket(sock:tag:elapsed:length:) has not been implemented")
     }
-
+    
     public func socketDidCloseReadStream(_ sock: GCDAsyncSocket) {
         self.socketDidCloseReadStreamHandler?(sock)
     }
-
+    
     public func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
         self.socketDidDisconnectWithErrorHandler?(sock, err)
     }
-
+    
     public func socketDidSecure(_ sock: GCDAsyncSocket) {
         self.socketDidSecureHandler?(sock)
     }
-
+    
     public func socket(_ sock: GCDAsyncSocket,
                        didReceive trust: SecTrust,
                        completionHandler: @escaping (Bool) -> Void) {

@@ -10,9 +10,9 @@ import Foundation
 import FMDB
 
 public class DataBaseSQLUtil {
-
+    
     fileprivate var tables = Set<String>()
-
+    
     private func setupTableList(_ database: FMDatabase) {
         if self.tables.count > 0 {
             return
@@ -29,12 +29,12 @@ public class DataBaseSQLUtil {
             debugPrint("查询数据库表出错")
         }
     }
-
+    
     func createCachedTableWithConfig(_ database: FMDatabase, config: CacheBusinessConfig) -> Bool {
         let sql = "CREATE TABLE IF NOT EXISTS \"\(config.tableName)\"" +
-                " (object blob, " +
-                "objectID text NOT NULL PRIMARY KEY," +
-                "cachedDate text DEFAULT (strftime('%Y-%m-%d %H:%M:%f','now','localtime')));"
+            " (object blob, " +
+            "objectID text NOT NULL PRIMARY KEY," +
+        "cachedDate text);"
         do {
             try database.executeUpdate(sql, values: nil)
             self.tables.insert(config.tableName)
@@ -44,36 +44,28 @@ public class DataBaseSQLUtil {
             return false
         }
     }
-
-    func insertCachedDataWithConfig(_ database: FMDatabase, config: CacheBusinessConfig, values: [(Data,String)],callBack: IsCompleteCallBack?) {
+    
+    func insertCachedDataWithConfig(_ database: FMDatabase, config: CacheBusinessConfig, values: [(Data,String)],callBack: ((_ isSuccess:Bool, _ flag:String?) -> Void)?) {
         if !self.isTableExistWith(database: database, config: config) {
             if !self.createCachedTableWithConfig(database, config: config) { return }
         }
-        guard database.beginTransaction() else {
-            debugPrint("⚠️开启事务失败\(#line)")
-            callBack?(false)
-            return
-        }
-
+        var dateStr = ""
         for item in values {
-            let sql = "replace into \(config.tableName) (object,objectID) values (?,?)"
+            let sql = "replace into \(config.tableName) (object,objectID,cachedDate) values (?,?,?)"
             do {
-                try database.executeUpdate(sql, values: [item.0, item.1])
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+                dateStr = dateFormatter.string(from: Date())
+                try database.executeUpdate(sql, values: [item.0, item.1, dateStr])
             } catch {
                 debugPrint("⚠️\(sql)执行错误，插入数据到表\"\(config.tableName)\"中失败!\(#line)")
-                callBack?(false)
+                callBack?(false,nil)
                 return
             }
         }
-
-        guard database.commit() else {
-            debugPrint("⚠️提交事务失败\(#line)")
-            callBack?(false)
-            return
-        }
-        callBack?(true)
+        callBack?(true,dateStr)
     }
-
+    
     func dataWithConfig(_ database: FMDatabase,
                         config: CacheBusinessConfig,
                         flag: String?,
@@ -82,8 +74,8 @@ public class DataBaseSQLUtil {
             if !self.createCachedTableWithConfig(database, config: config) { return }
         }
         let sql = flag == nil ?
-                "select object,cachedDate from \(config.tableName) order by cachedDate desc limit \(config.length)" :
-                "select object,cachedDate from \(config.tableName) where cachedDate <= \(flag!) order by cachedDate desc limit \(config.length)"
+            "select object,cachedDate from \(config.tableName) order by cachedDate asc limit \(config.length)" :
+        "select object,cachedDate from \(config.tableName) where cachedDate > '\(flag!)' order by cachedDate asc limit \(config.length)"
         var values = [(Data, String)]()
         do {
             let rs = try database.executeQuery(sql, values: nil)
@@ -101,7 +93,7 @@ public class DataBaseSQLUtil {
             return
         }
     }
-
+    
     func deleteTableWithConfig(_ database: FMDatabase,
                                config: CacheBusinessConfig,
                                callBack: IsCompleteCallBack?) {
@@ -152,7 +144,7 @@ public class DataBaseSQLUtil {
         }
         callBack?(true)
     }
-
+    
     func isTableExistWith(database: FMDatabase, config: CacheBusinessConfig) -> Bool {
         self.setupTableList(database)
         if self.tables.contains(config.tableName) {

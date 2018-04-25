@@ -18,7 +18,7 @@ public typealias IsCompleteCallBack = (_ isSuccess: Bool) -> Void
 public class CacheHelper<T:TargetType> {
     var provider:MoyaProvider<T>
     var config:CacheBusinessConfig
-    var target:T
+    public var target:T
     
     public init(provider: MoyaProvider<T>,config:CacheBusinessConfig,target: T){
         self.provider = provider
@@ -28,8 +28,8 @@ public class CacheHelper<T:TargetType> {
     
     /// fetch Data
     public func fetchCachedData<M: CacheMappable>(config: CacheBusinessConfig,
-                                      flag: String?,
-                                      callBack: @escaping FetchCachedObjectCallBack<M>) {
+                                                  flag: String?,
+                                                  callBack: @escaping FetchCachedObjectCallBack<M>) {
         func fetchDataByNetwork() {
             self.provider.request(self.target) { result in
                 switch result {
@@ -44,9 +44,9 @@ public class CacheHelper<T:TargetType> {
                         guard let mapRs = Mapper<M>().mapArray(JSONString: rsJson) else {return}
                         let dataArray = mapRs.filter{ $0.toJSONString()?.data(using: String.Encoding.utf8) != nil}.map{ ($0.toJSONString()!.data(using: String.Encoding.utf8)!,$0.cachePrimaryKey)}
                         // Save cache to Database
-                        DataBaseManager.shared.insertDataWithConfig(config, values: dataArray) { isSuccess in
+                        DataBaseManager.shared.insertDataWithConfig(config, values: dataArray) { isSuccess,flag in
                             if isSuccess {
-                                callBack(true, "从网络获取数据", mapRs, nil)
+                                callBack(true, "从网络获取数据", mapRs, flag)
                             }
                         }
                     } catch {
@@ -95,7 +95,7 @@ public class CacheHelper<T:TargetType> {
     
     /// 删除表
     public func deleteTableWith(config: CacheBusinessConfig,
-                         callBack: IsCompleteCallBack?) {
+                                callBack: IsCompleteCallBack?) {
         DataBaseManager.shared.deleteTableWith(config: config, callBack: callBack)
     }
     
@@ -107,15 +107,15 @@ public class CacheHelper<T:TargetType> {
     ///   - values: 需要删除的主键值，一般为CacheModel中的id
     ///   - callBack: 执行回调
     public func deleteDataWith(config: CacheBusinessConfig,
-                        values: [String],
-                        callBack: IsCompleteCallBack?) {
+                               values: [String],
+                               callBack: IsCompleteCallBack?) {
         DataBaseManager.shared.deleteDataWith(config: config, values: values, callBack: callBack)
     }
     
     /// 批量或单个插入数据
     public func insertCachedData<M: CacheMappable>(config: CacheBusinessConfig,
-                                       values: [M],
-                                       callBack: IsCompleteCallBack?) {
+                                                   values: [M],
+                                                   callBack: ((_ isSuccess:Bool, _ flag:String?)->Void)?) {
         var dataValues = [(Data,String)]()
         for item in values {
             guard let json = item.toJSONString() else {
@@ -129,7 +129,7 @@ public class CacheHelper<T:TargetType> {
             DataBaseManager.shared.insertDataWithConfig(config, values: dataValues, callBack: callBack)
         } else {
             debugPrint("插入数据库中数据为空，请检查数据！\(#function)")
-            callBack?(false)
+            callBack?(false,nil)
         }
     }
 }

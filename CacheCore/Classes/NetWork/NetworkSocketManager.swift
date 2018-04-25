@@ -15,13 +15,13 @@ public class NetWorkSocketManager {
     var host:String
     var config: CacheBusinessConfig
     
-    init(host: String,port: UInt16,config: CacheBusinessConfig) {
+    public init(host: String,port: UInt16,config: CacheBusinessConfig) {
         self.host = host
         self.port = port
         self.config = config
     }
     
-    func start() {
+    public func start() {
         debugPrint("开始socket测试")
         self.configDelegate()
         do {

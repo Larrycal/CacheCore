@@ -72,20 +72,20 @@ public class CacheBusinessConfig {
     var length: Int = 10
     var tableName: String
     var keyPath: String?
-
+    
     public init(validTime: TimeInterval, length: Int, tableName: String, keyPath: String? = nil) {
         self.validTime = validTime
         self.tableName = tableName
         self.length = length
         self.keyPath = keyPath
     }
-
+    
     public convenience init(length: Int, tableName: String, keyPath: String? = nil) {
         self.init(validTime: defaultValidTime, length: length, tableName: tableName, keyPath: keyPath)
     }
-
+    
     public convenience init(tableName: String, keyPath: String? = nil) {
         self.init(validTime: defaultValidTime, length: defaultLength, tableName: tableName, keyPath: keyPath)
     }
-
+    
 }
